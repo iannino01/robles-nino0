@@ -4,11 +4,79 @@
       <span>Directorio</span>
       <h2>Integrantes registrados</h2>
     </div>
-    <strong>{{ familia.length }} personas</strong>
+    <strong>{{ familia().length }} personas</strong>
   </div>
 
+  <section class="family-admin">
+    <div class="family-admin-copy">
+      <span>Cuenta activa</span>
+      <h3>{{ authGoogle.perfil()?.name || authGoogle.perfil()?.email || 'Usuario autenticado' }}</h3>
+      <p>
+        Agrega familiares desde tu propia cuenta. Si Firebase ya esta configurado, estos datos se guardan en la nube.
+      </p>
+    </div>
+
+    <form class="family-form" (ngSubmit)="agregarFamiliar()">
+      <label>
+        <span>Nombre</span>
+        <input
+          type="text"
+          name="nombre"
+          [(ngModel)]="familiarNuevo.nombre"
+          placeholder="Nombre"
+          required>
+      </label>
+
+      <label>
+        <span>Apellido</span>
+        <input
+          type="text"
+          name="apellido"
+          [(ngModel)]="familiarNuevo.apellido"
+          placeholder="Apellido"
+          required>
+      </label>
+
+      <label>
+        <span>Fecha de nacimiento</span>
+        <input
+          type="date"
+          name="fechaNac"
+          [(ngModel)]="familiarNuevo.fechaNac"
+          required>
+      </label>
+
+      <label>
+        <span>Signo zodiacal</span>
+        <input
+          type="text"
+          name="signoZod"
+          [(ngModel)]="familiarNuevo.signoZod"
+          placeholder="Opcional">
+      </label>
+
+      <button class="family-submit" type="submit" [disabled]="guardando()">
+        {{ guardando() ? 'Guardando...' : 'Agregar familiar' }}
+      </button>
+    </form>
+  </section>
+
+  @if (!backendDisponible()) {
+    <p class="family-note">
+      Firebase aun no esta configurado en este proyecto. Por ahora los familiares se guardan solo en este navegador.
+    </p>
+  }
+
+  @if (error()) {
+    <p class="family-error">{{ error() }}</p>
+  }
+
+  @if (cargando()) {
+    <p class="family-loading">Cargando familiares...</p>
+  }
+
   <div class="family-grid">
-    <article class="family-card" *ngFor="let persona of familia">
+    <article class="family-card" *ngFor="let persona of familia()">
       <div class="family-avatar">
         {{ persona.nombre.charAt(0) }}{{ persona.apellido.charAt(0) }}
       </div>
@@ -19,11 +87,11 @@
         <dl>
           <div>
             <dt>Fecha de nacimiento</dt>
-            <dd>{{ persona.fecha_nac }}</dd>
+            <dd>{{ persona.fechaNac || 'Pendiente' }}</dd>
           </div>
           <div>
             <dt>Signo zodiacal</dt>
-            <dd>{{ persona.signo_zod || 'Pendiente' }}</dd>
+            <dd>{{ persona.signoZod || 'Pendiente' }}</dd>
           </div>
         </dl>
       </div>

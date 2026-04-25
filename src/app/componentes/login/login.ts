@@ -57,6 +57,7 @@ export class Login implements OnInit {
     this.enviando.set(true);
 
     setTimeout(() => {
+      this.authGoogle.iniciarSesionDemo(this.correo);
       this.enviando.set(false);
       void this.router.navigateByUrl('/sesion-iniciada', { replaceUrl: true });
     }, 1400);

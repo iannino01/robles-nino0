@@ -56,6 +56,66 @@ git commit -m "Initial commit"
 
 Then connect the GitHub repository in Netlify and it will build the app automatically.
 
+## Firebase backend
+
+The app is now prepared to use Firebase for:
+
+- Google-backed authenticated sessions
+- per-user family members
+- Firestore storage for the family list
+
+Before Firebase is configured, the app still works and stores family members in the current browser only.
+
+### 1. Create a Firebase project
+
+Create a project in Firebase and enable:
+
+- Authentication
+- Google as a sign-in provider
+- Firestore Database
+
+### 2. Add your web app config
+
+Open `src/app/firebase.config.ts` and replace the empty strings with your Firebase web app values:
+
+- `apiKey`
+- `authDomain`
+- `projectId`
+- `storageBucket`
+- `messagingSenderId`
+- `appId`
+
+### 3. Configure Firestore rules
+
+Use rules like these so each signed-in user can read and write only their own family records:
+
+```txt
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usuarios/{userId}/familiares/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+### 4. Allow the deployed site in Google/Firebase
+
+Add your Netlify domain to the authorized domains list and OAuth settings, for example:
+
+- `familia-robles-nino.netlify.app`
+
+### 5. Deploy the update
+
+After saving your Firebase config:
+
+```bash
+git add .
+git commit -m "Configura Firebase"
+git push
+```
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:

@@ -1,4 +1,7 @@
 import { Injectable, signal } from '@angular/core';
+import { GoogleAuthProvider, browserLocalPersistence, getAuth, setPersistence, signInWithCredential, signOut } from 'firebase/auth';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { firebaseConfig, firebaseEstaConfigurado } from '../firebase.config';
 
 type PerfilGoogle = {
   email?: string;
@@ -51,16 +54,23 @@ export class AuthGoogle {
   readonly autenticado = signal(false);
   readonly inicializado = signal(false);
   readonly error = signal('');
+  readonly uid = signal('');
+  readonly backendDisponible = signal(firebaseEstaConfigurado());
 
   private readonly clientId =
     '824395350675-n2ut8gm7ulja010fv9o88o1krjubd0p8.apps.googleusercontent.com';
   private readonly perfilStorageKey = 'roblesnino_google_profile';
   private readonly tokenStorageKey = 'roblesnino_google_token';
+  private readonly uidStorageKey = 'roblesnino_auth_uid';
   private tokenClient: GoogleTokenClient | null = null;
+  private firebaseAuth = this.backendDisponible()
+    ? getAuth(getApps().length ? getApp() : initializeApp(firebaseConfig))
+    : null;
 
   constructor() {
     this.restaurarSesion();
     void this.inicializarLoginGmail();
+    void this.prepararPersistenciaFirebase();
   }
 
   async inicializarLoginGmail(): Promise<void> {
@@ -102,6 +112,8 @@ export class AuthGoogle {
     const token = localStorage.getItem(this.tokenStorageKey);
     const oauth2 = window.google?.accounts?.oauth2;
 
+    void this.cerrarSesionFirebase();
+
     if (token && oauth2) {
       oauth2.revoke(token, () => this.limpiarSesion());
       return;
@@ -114,6 +126,22 @@ export class AuthGoogle {
     return this.perfil();
   }
 
+  iniciarSesionDemo(email: string): void {
+    const perfilDemo: PerfilGoogle = {
+      email,
+      given_name: email.split('@')[0] || 'Usuario',
+      name: email.split('@')[0] || 'Usuario',
+      sub: email,
+    };
+
+    this.guardarSesion(perfilDemo, '');
+    this.error.set('');
+  }
+
+  getIdentificadorUsuario(): string {
+    return this.uid() || this.perfil()?.sub || this.perfil()?.email || '';
+  }
+
   private async procesarRespuestaToken(response: GoogleTokenResponse): Promise<void> {
     if (response.error || !response.access_token) {
       this.error.set(response.error_description || 'No fue posible iniciar sesion con Google.');
@@ -122,6 +150,7 @@ export class AuthGoogle {
 
     try {
       const perfil = await this.obtenerPerfilUsuario(response.access_token);
+      await this.iniciarSesionFirebase(response.access_token);
       this.guardarSesion(perfil, response.access_token);
       this.error.set('');
     } catch (error) {
@@ -150,17 +179,27 @@ export class AuthGoogle {
     localStorage.setItem(this.tokenStorageKey, accessToken);
     this.perfil.set(perfil);
     this.autenticado.set(true);
+    if (!this.uid()) {
+      const identificador = perfil.sub || perfil.email || '';
+      this.uid.set(identificador);
+      if (identificador) {
+        localStorage.setItem(this.uidStorageKey, identificador);
+      }
+    }
   }
 
   private limpiarSesion(): void {
     localStorage.removeItem(this.perfilStorageKey);
     localStorage.removeItem(this.tokenStorageKey);
+    localStorage.removeItem(this.uidStorageKey);
     this.perfil.set(null);
     this.autenticado.set(false);
+    this.uid.set('');
   }
 
   private restaurarSesion(): void {
     const perfilGuardado = localStorage.getItem(this.perfilStorageKey);
+    const uidGuardado = localStorage.getItem(this.uidStorageKey);
     if (!perfilGuardado) {
       return;
     }
@@ -169,8 +208,48 @@ export class AuthGoogle {
       const perfil = JSON.parse(perfilGuardado) as PerfilGoogle;
       this.perfil.set(perfil);
       this.autenticado.set(true);
+      this.uid.set(uidGuardado || perfil.sub || perfil.email || '');
     } catch {
       this.limpiarSesion();
+    }
+  }
+
+  private async prepararPersistenciaFirebase(): Promise<void> {
+    if (!this.firebaseAuth) {
+      return;
+    }
+
+    try {
+      await setPersistence(this.firebaseAuth, browserLocalPersistence);
+      if (this.firebaseAuth.currentUser?.uid) {
+        this.uid.set(this.firebaseAuth.currentUser.uid);
+        localStorage.setItem(this.uidStorageKey, this.firebaseAuth.currentUser.uid);
+      }
+    } catch (error) {
+      console.error('No se pudo preparar la persistencia de Firebase.', error);
+    }
+  }
+
+  private async iniciarSesionFirebase(accessToken: string): Promise<void> {
+    if (!this.firebaseAuth) {
+      return;
+    }
+
+    const credencial = GoogleAuthProvider.credential(null, accessToken);
+    const respuesta = await signInWithCredential(this.firebaseAuth, credencial);
+    this.uid.set(respuesta.user.uid);
+    localStorage.setItem(this.uidStorageKey, respuesta.user.uid);
+  }
+
+  private async cerrarSesionFirebase(): Promise<void> {
+    if (!this.firebaseAuth) {
+      return;
+    }
+
+    try {
+      await signOut(this.firebaseAuth);
+    } catch (error) {
+      console.error('No se pudo cerrar la sesion de Firebase.', error);
     }
   }
 

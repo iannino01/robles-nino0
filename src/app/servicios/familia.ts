@@ -1,69 +1,143 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { addDoc, collection, getDocs, getFirestore, orderBy, query } from 'firebase/firestore';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { Familiar } from '../modelos/familiar';
+import { firebaseConfig, firebaseEstaConfigurado } from '../firebase.config';
+
+type FamiliarNuevo = {
+  apellido: string;
+  fechaNac: string;
+  nombre: string;
+  signoZod: string;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServFamilia {
+  readonly familia = signal<Familiar[]>([]);
+  readonly cargando = signal(false);
+  readonly error = signal('');
+  readonly backendDisponible = signal(firebaseEstaConfigurado());
 
-  constructor() { }
+  private readonly storageKey = 'roblesnino_familia_local';
+  private firestore = this.backendDisponible()
+    ? getFirestore(getApps().length ? getApp() : initializeApp(firebaseConfig))
+    : null;
 
-  
-  arregloFamilia: any[] = [
-  
-    {
-    id : 1,
-    nombre : 'Ian David',
-    apellido : 'Robles Nino',
-    fecha_nac : '1/04/06',
-    signo_zod : ''
-    },
+  async cargarFamilia(usuarioId: string): Promise<void> {
+    if (!usuarioId) {
+      this.familia.set([]);
+      return;
+    }
 
-    {
-    id : 2,
-    nombre : 'Maria Victoria',
-    apellido : 'Nino Herrera',
-    fecha_nac : '27/12/74',
-    signo_zod : ''
-    },
+    this.cargando.set(true);
+    this.error.set('');
 
-    {
-    id : 3,
-    nombre : 'Daniel Isai',
-    apellido : 'Robles Nino',
-    fecha_nac : '28/11/04',
-    signo_zod : ''
-    },
+    try {
+      if (this.firestore) {
+        await this.cargarDesdeFirestore(usuarioId);
+      } else {
+        this.cargarDesdeLocal(usuarioId);
+      }
+    } catch (error) {
+      console.error('No se pudo cargar la familia.', error);
+      this.error.set('No se pudo cargar la familia. Revisa tu configuracion de Firebase.');
+      this.cargarDesdeLocal(usuarioId);
+    } finally {
+      this.cargando.set(false);
+    }
+  }
 
-    {
-    id : 4,
-    nombre : 'Monica Yaresy',
-    apellido : 'Pachicano Nino',
-    fecha_nac : '17/03/92',
-    signo_zod : ''
-    },
-    
-      {
-    id : 5,
-    nombre : 'Katia Gissell',
-    apellido : 'Pachicano Nino',
-    fecha_nac : '16/05/94',
-    signo_zod : ''
-    },
+  async agregarFamiliar(usuarioId: string, familiar: FamiliarNuevo): Promise<void> {
+    if (!usuarioId) {
+      this.error.set('Primero necesitas iniciar sesion para agregar familiares.');
+      return;
+    }
 
+    this.error.set('');
 
-    {
-    id : 6,
-    nombre : 'Danisse',
-    apellido : 'Pachicano Nino',
-    fecha_nac : '14/07/06',
-    signo_zod : ''
-    },
-    
-  ];
+    const nuevoFamiliar: Familiar = {
+      id: this.generarId(),
+      nombre: familiar.nombre.trim(),
+      apellido: familiar.apellido.trim(),
+      fechaNac: familiar.fechaNac,
+      signoZod: familiar.signoZod.trim(),
+      creadoPor: usuarioId,
+      creadoEn: new Date().toISOString(),
+    };
 
-consultarFamilia(){
-  return this.arregloFamilia;
+    try {
+      if (this.firestore) {
+        const familiaresRef = collection(this.firestore, 'usuarios', usuarioId, 'familiares');
+        await addDoc(familiaresRef, nuevoFamiliar);
+      }
+
+      this.guardarEnLocal(usuarioId, nuevoFamiliar);
+      await this.cargarFamilia(usuarioId);
+    } catch (error) {
+      console.error('No se pudo guardar el familiar.', error);
+      this.error.set('No se pudo guardar el familiar. Revisa tu configuracion de Firebase.');
+    }
+  }
+
+  private async cargarDesdeFirestore(usuarioId: string): Promise<void> {
+    if (!this.firestore) {
+      return;
+    }
+
+    const familiaresRef = collection(this.firestore, 'usuarios', usuarioId, 'familiares');
+    const consulta = query(familiaresRef, orderBy('creadoEn', 'desc'));
+    const snapshot = await getDocs(consulta);
+    const familiares = snapshot.docs.map((doc) => doc.data() as Familiar);
+    this.familia.set(familiares);
+
+    if (familiares.length > 0) {
+      localStorage.setItem(this.obtenerLlaveUsuario(usuarioId), JSON.stringify(familiares));
+      return;
+    }
+
+    this.cargarDesdeLocal(usuarioId);
+  }
+
+  private cargarDesdeLocal(usuarioId: string): void {
+    const datos = localStorage.getItem(this.obtenerLlaveUsuario(usuarioId));
+    if (!datos) {
+      this.familia.set([]);
+      return;
+    }
+
+    try {
+      this.familia.set(JSON.parse(datos) as Familiar[]);
+    } catch {
+      this.familia.set([]);
+    }
+  }
+
+  private guardarEnLocal(usuarioId: string, nuevoFamiliar: Familiar): void {
+    const actuales = this.leerLocales(usuarioId);
+    const actualizados = [nuevoFamiliar, ...actuales];
+    localStorage.setItem(this.obtenerLlaveUsuario(usuarioId), JSON.stringify(actualizados));
+  }
+
+  private leerLocales(usuarioId: string): Familiar[] {
+    const datos = localStorage.getItem(this.obtenerLlaveUsuario(usuarioId));
+    if (!datos) {
+      return [];
+    }
+
+    try {
+      return JSON.parse(datos) as Familiar[];
+    } catch {
+      return [];
+    }
+  }
+
+  private obtenerLlaveUsuario(usuarioId: string): string {
+    return `${this.storageKey}:${usuarioId}`;
+  }
+
+  private generarId(): string {
+    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
 }
-
-}
-
