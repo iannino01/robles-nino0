@@ -3,17 +3,31 @@ body {
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(210, 224, 240, 0.55), transparent 34%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
-  color: #101828;
-  font-family: Inter, Arial, Helvetica, sans-serif;
+    radial-gradient(circle at top left, rgba(89, 191, 92, 0.18), transparent 26%),
+    radial-gradient(circle at top right, rgba(42, 72, 146, 0.12), transparent 28%),
+    linear-gradient(180deg, #07110b 0%, #0c1510 18%, #101714 52%, #eef2ea 52%, #f5f7f1 100%);
+  color: #ecf3ea;
+  font-family: Manrope, Arial, Helvetica, sans-serif;
 }
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(74, 181, 83, 0.35);
+  color: #f8fff8;
+}
+
+img {
+  max-width: 100%;
 }
 
 a,
@@ -24,4 +38,9 @@ input {
     border-color 0.2s ease,
     color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+button,
+input {
+  font: inherit;
 }

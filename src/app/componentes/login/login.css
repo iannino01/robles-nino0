@@ -8,16 +8,19 @@
 
 .login-wrapper {
   overflow: hidden;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid #e4e7ec;
+  border-radius: 32px;
+  background: rgba(247, 250, 246, 0.96);
+  border: 1px solid rgba(137, 173, 142, 0.18);
+  box-shadow: 0 30px 80px rgba(2, 9, 4, 0.22);
 }
 
 .login-hero {
   height: 100%;
   padding: 3rem;
   color: #ffffff;
-  background: linear-gradient(150deg, #132238 0%, #203553 55%, #2c4569 100%);
+  background:
+    radial-gradient(circle at top left, rgba(124, 212, 130, 0.28), transparent 28%),
+    linear-gradient(155deg, #08110b 0%, #102016 45%, #183122 100%);
 }
 
 .login-tag {
@@ -25,7 +28,7 @@
   margin-bottom: 1rem;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(131, 214, 135, 0.16);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -34,14 +37,15 @@
 
 .login-hero h1 {
   margin-bottom: 1rem;
-  font-size: 2.8rem;
-  line-height: 1.02;
+  font-family: Sora, Manrope, Arial, sans-serif;
+  font-size: 3rem;
+  line-height: 1;
 }
 
 .login-lead {
   margin-bottom: 2rem;
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.84);
+  color: rgba(238, 246, 239, 0.8);
 }
 
 .login-features {
@@ -51,9 +55,10 @@
 
 .feature-item {
   padding: 1rem 1.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(141, 213, 145, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
 }
 
 .feature-item strong,
@@ -63,11 +68,14 @@
 }
 
 .feature-item span {
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(235, 244, 236, 0.76);
 }
 
 .login-panel {
   padding: 3rem;
+  background:
+    radial-gradient(circle at top right, rgba(126, 202, 105, 0.12), transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(245, 248, 242, 0.98));
 }
 
 .google-login-row {
@@ -78,7 +86,7 @@
 }
 
 .google-login-label {
-  color: #102a43;
+  color: #14301f;
   font-size: 0.96rem;
   font-weight: 600;
 }
@@ -89,14 +97,14 @@
   justify-content: center;
   width: 50px;
   height: 50px;
-  border: 1px solid #d0d7e2;
-  border-radius: 12px;
+  border: 1px solid #d7dfd5;
+  border-radius: 16px;
   background: #ffffff;
-  box-shadow: 0 10px 24px rgba(16, 42, 67, 0.08);
+  box-shadow: 0 14px 28px rgba(7, 17, 11, 0.08);
 }
 
 .google-login-button:hover {
-  background: #f7f9fb;
+  background: #f7fbf7;
 }
 
 .google-icon {
@@ -106,7 +114,7 @@
 }
 
 .google-login-feedback {
-  color: #1a3855;
+  color: #18452a;
   font-size: 0.95rem;
   font-weight: 500;
 }
@@ -127,7 +135,7 @@
 
 .login-overline {
   margin-bottom: 0.5rem;
-  color: #1a3855;
+  color: #2c6d3b;
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -171,8 +179,9 @@
 
 .login-form .form-control {
   min-height: 48px;
-  border-radius: 12px;
-  border: 1px solid #d0d7e2;
+  border-radius: 14px;
+  border: 1px solid #d6ddd2;
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .password-field {
@@ -184,10 +193,10 @@
 .password-toggle {
   min-width: 110px;
   padding: 0 1rem;
-  border: 1px solid #d0d7e2;
-  border-radius: 12px;
+  border: 1px solid #d4dbd0;
+  border-radius: 14px;
   background: #ffffff;
-  color: #102a43;
+  color: #173021;
   font-weight: 600;
 }
 
@@ -200,7 +209,7 @@
 }
 
 .login-options a {
-  color: #102a43;
+  color: #1f5b33;
   text-decoration: none;
 }
 
@@ -208,20 +217,21 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  color: #52606d;
+  color: #57655b;
 }
 
 .remember-me input {
-  accent-color: #102a43;
+  accent-color: #2d8a3f;
 }
 
 .login-submit {
   min-height: 50px;
-  border: 1px solid #102a43;
-  border-radius: 12px;
-  background: #102a43;
-  color: #ffffff;
+  border: 1px solid #2c7e3a;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2d8a3f 0%, #6bc45f 100%);
+  color: #061007;
   font-weight: 700;
+  box-shadow: 0 16px 28px rgba(56, 139, 61, 0.2);
 }
 
 .login-submit:disabled {
@@ -230,7 +240,7 @@
 }
 
 .login-submit:hover {
-  background: #1a3855;
+  background: linear-gradient(135deg, #3a9846 0%, #82d06f 100%);
 }
 
 .login-status {
