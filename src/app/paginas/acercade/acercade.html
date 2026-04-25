@@ -1,0 +1,17 @@
+<section class="page-section">
+  <div class="section-header">
+    <span>Resumen del proyecto</span>
+    <h2>Por que existe este portal</h2>
+    <p>La informacion se presenta en bloques cortos para que sea facil entender el alcance del sitio y su utilidad.</p>
+  </div>
+
+  <div class="about-grid">
+    @for (item of info; track item.id) {
+      <article class="about-card">
+        <span class="about-index">0{{ item.id }}</span>
+        <h3>{{ item.titulo }}</h3>
+        <p>{{ item.descripcion }}</p>
+      </article>
+    }
+  </div>
+</section>

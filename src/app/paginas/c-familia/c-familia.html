@@ -1,0 +1,32 @@
+<section class="page-section">
+  <div class="family-summary">
+    <div>
+      <span>Directorio</span>
+      <h2>Integrantes registrados</h2>
+    </div>
+    <strong>{{ familia.length }} personas</strong>
+  </div>
+
+  <div class="family-grid">
+    <article class="family-card" *ngFor="let persona of familia">
+      <div class="family-avatar">
+        {{ persona.nombre.charAt(0) }}{{ persona.apellido.charAt(0) }}
+      </div>
+
+      <div class="family-body">
+        <h3>{{ persona.nombre }} {{ persona.apellido }}</h3>
+
+        <dl>
+          <div>
+            <dt>Fecha de nacimiento</dt>
+            <dd>{{ persona.fecha_nac }}</dd>
+          </div>
+          <div>
+            <dt>Signo zodiacal</dt>
+            <dd>{{ persona.signo_zod || 'Pendiente' }}</dd>
+          </div>
+        </dl>
+      </div>
+    </article>
+  </div>
+</section>

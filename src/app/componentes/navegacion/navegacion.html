@@ -1,0 +1,64 @@
+<header class="nav-shell">
+  <div class="nav-frame">
+    <a class="brand-link" routerLink="/familia" (click)="cerrarMenu()">
+      <img
+        src="/terraria1.jpg"
+        alt="Logo del portal"
+        width="44"
+        height="44"
+        class="brand-image">
+      <span class="brand-copy">
+        <strong>Robles Nino</strong>
+        <small>Portal familiar</small>
+      </span>
+    </a>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      (click)="alternarMenu()"
+      aria-controls="navPanel"
+      [attr.aria-expanded]="menuAbierto"
+      aria-label="Abrir menu principal">
+      Menu
+    </button>
+
+    <div class="nav-panel" id="navPanel" [class.open]="menuAbierto">
+      <nav class="nav-links" aria-label="Principal">
+        <a routerLink="/familia" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="cerrarMenu()">
+          Familia
+        </a>
+        <a routerLink="/noticias" routerLinkActive="active" (click)="cerrarMenu()">
+          Noticias
+        </a>
+        <a routerLink="/acercade" routerLinkActive="active" (click)="cerrarMenu()">
+          Proyecto
+        </a>
+      </nav>
+
+      <div class="nav-actions">
+        @if (authGoogle.perfil(); as perfil) {
+          <div class="profile-chip">
+            @if (perfil.picture) {
+              <img
+                [src]="perfil.picture"
+                [alt]="'Foto de ' + (perfil.name || 'la cuenta de Google')"
+                class="profile-avatar">
+            }
+            <span class="profile-name">
+              {{ perfil.name || perfil.given_name || perfil.email }}
+            </span>
+          </div>
+
+          <button class="logout-button" type="button" (click)="cerrarSesion()">
+            Cerrar sesion
+          </button>
+        } @else {
+          <a class="nav-login-button" routerLink="/login" routerLinkActive="active-login" (click)="cerrarMenu()">
+            Iniciar sesion
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</header>

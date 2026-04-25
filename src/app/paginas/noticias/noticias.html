@@ -1,0 +1,23 @@
+<section class="page-section">
+  <div class="section-header">
+    <span>Actualizaciones</span>
+    <h2>Noticias disponibles</h2>
+    <p>Una lista sencilla para revisar eventos, logros y avisos sin tener que abrir todo de golpe.</p>
+  </div>
+
+  <div class="news-list">
+    <article class="news-card" *ngFor="let noticia of noticias">
+      <div class="news-badge">{{ noticia.tipo }}</div>
+
+      <div class="news-body">
+        <div class="news-meta">{{ noticia.fecha }}</div>
+        <h3>{{ noticia.titulo }}</h3>
+        <p>{{ noticia.descripcion }}</p>
+      </div>
+
+      <a [routerLink]="['/noticia', noticia.id]" class="news-link">
+        Ver detalle
+      </a>
+    </article>
+  </div>
+</section>

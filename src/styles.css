@@ -1,0 +1,27 @@
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(210, 224, 240, 0.55), transparent 34%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+  color: #101828;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a,
+button,
+input {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}

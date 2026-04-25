@@ -1,0 +1,100 @@
+:host {
+  display: block;
+}
+
+.page-section {
+  padding-bottom: 1.5rem;
+}
+
+.family-summary {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.family-summary span {
+  color: #667085;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.family-summary h2 {
+  margin: 0.35rem 0 0;
+  color: #101828;
+}
+
+.family-summary strong {
+  color: #122033;
+  font-size: 1rem;
+}
+
+.family-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.family-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e4e7ec;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.family-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #122033;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.family-body h3 {
+  margin: 0 0 0.9rem;
+  color: #101828;
+  font-size: 1.1rem;
+}
+
+.family-body dl {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.family-body dt {
+  color: #667085;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.family-body dd {
+  margin: 0.2rem 0 0;
+  color: #344054;
+}
+
+@media (max-width: 900px) {
+  .family-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .family-summary {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .family-grid {
+    grid-template-columns: 1fr;
+  }
+}
