@@ -12,7 +12,7 @@
       <span>Cuenta activa</span>
       <h3>{{ authGoogle.perfil()?.name || authGoogle.perfil()?.email || 'Usuario autenticado' }}</h3>
       <p>
-        Agrega familiares desde tu propia cuenta. Si Firebase ya esta configurado, estos datos se guardan en la nube.
+        Agrega familiares desde tu propia cuenta. Si Cloud ya esta configurado, estos datos se guardan en la nube.
       </p>
     </div>
 
@@ -63,7 +63,7 @@
 
   @if (!backendDisponible()) {
     <p class="family-note">
-      Firebase aun no esta configurado en este proyecto. Por ahora los familiares se guardan solo en este navegador.
+      Cloud aun no esta configurado en este proyecto. Por ahora los familiares se guardan solo en este navegador.
     </p>
   }
 

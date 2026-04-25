@@ -46,7 +46,7 @@ export class AuthGoogle {
     this.error.set('');
 
     if (!this.firebaseAuth) {
-      this.error.set('Firebase aun no esta configurado. Revisa la configuracion del proyecto.');
+      this.error.set('Cloud aun no esta configurado. Revisa la configuracion del proyecto.');
       this.inicializado.set(true);
       return;
     }
@@ -58,7 +58,7 @@ export class AuthGoogle {
       this.guardarSesionDesdeUsuario(respuesta.user);
     } catch (error) {
       console.error('No fue posible iniciar sesion con Google.', error);
-      this.error.set('No fue posible iniciar sesion con Google. Revisa la configuracion de Firebase.');
+      this.error.set('No fue posible iniciar sesion con Google. Revisa la configuracion de Cloud.');
       this.limpiarSesion();
     } finally {
       this.inicializado.set(true);

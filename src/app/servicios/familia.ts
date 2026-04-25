@@ -42,7 +42,7 @@ export class ServFamilia {
       }
     } catch (error) {
       console.error('No se pudo cargar la familia.', error);
-      this.error.set('No se pudo cargar la familia. Revisa tu configuracion de Firebase.');
+      this.error.set('No se pudo cargar la familia. Revisa tu configuracion de Cloud.');
       this.cargarDesdeLocal(usuarioId);
     } finally {
       this.cargando.set(false);
@@ -77,7 +77,7 @@ export class ServFamilia {
       await this.cargarFamilia(usuarioId);
     } catch (error) {
       console.error('No se pudo guardar el familiar.', error);
-      this.error.set('No se pudo guardar el familiar. Revisa tu configuracion de Firebase.');
+      this.error.set('No se pudo guardar el familiar. Revisa tu configuracion de Cloud.');
     }
   }
 
