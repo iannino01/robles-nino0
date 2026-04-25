@@ -58,7 +58,7 @@ export class AuthGoogle {
   readonly backendDisponible = signal(firebaseEstaConfigurado());
 
   private readonly clientId =
-    '824395350675-n2ut8gm7ulja010fv9o88o1krjubd0p8.apps.googleusercontent.com';
+    '129588296326-99ug6b9gtulps9lr99pquri92fjoggrm.apps.googleusercontent.com';
   private readonly perfilStorageKey = 'roblesnino_google_profile';
   private readonly tokenStorageKey = 'roblesnino_google_token';
   private readonly uidStorageKey = 'roblesnino_auth_uid';
