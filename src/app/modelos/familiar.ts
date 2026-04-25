@@ -4,6 +4,8 @@ export type Familiar = {
   apellido: string;
   fechaNac: string;
   signoZod: string;
+  parentesco: string;
+  descripcion: string;
   creadoPor: string;
   creadoEn: string;
 };

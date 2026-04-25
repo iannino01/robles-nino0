@@ -1,32 +1,8 @@
-@if (mostrarTitulo) {
-  <section class="hero-banner">
-    <div class="hero-copy">
-      <span class="hero-eyebrow">Robles Nino</span>
-      <h1 class="hero-title">{{ titulo }}</h1>
-      <p class="hero-description">{{ descripcion }}</p>
-
-      <div class="hero-actions">
-        @for (acceso of accesos; track acceso.ruta) {
-          <a [routerLink]="acceso.ruta" routerLinkActive="active-link">
-            {{ acceso.etiqueta }}
-          </a>
-        }
-      </div>
-    </div>
-
-    <div class="hero-panel">
-      <div>
-        <span class="panel-label">Rutas principales</span>
-        <strong>3 secciones base</strong>
-      </div>
-      <div>
-        <span class="panel-label">Flujo</span>
-        <strong>Entrar, consultar, volver</strong>
-      </div>
-      <div>
-        <span class="panel-label">Enfoque</span>
-        <strong>Lectura simple y acceso rapido</strong>
-      </div>
-    </div>
-  </section>
-}
+<div class="container text-center my-5">
+  <h1 class="display-4 fw-bold text-dark">
+    Arbol Genealogico
+  </h1>
+  <p class="lead text-muted">
+    Familia Robles Nino
+  </p>
+</div>

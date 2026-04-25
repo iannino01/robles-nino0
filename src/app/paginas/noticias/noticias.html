@@ -1,23 +1,29 @@
-<section class="page-section">
-  <div class="section-header">
-    <span>Actualizaciones</span>
-    <h2>Noticias disponibles</h2>
-    <p>Una lista sencilla para revisar eventos, logros y avisos sin tener que abrir todo de golpe.</p>
-  </div>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Noticias</h2>
 
-  <div class="news-list">
-    <article class="news-card" *ngFor="let noticia of noticias">
-      <div class="news-badge">{{ noticia.tipo }}</div>
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let noticia of noticias">
+      <div class="card h-100 shadow-sm position-relative">
+        <img
+          src="https://via.placeholder.com/400x200"
+          class="card-img-top"
+          alt="Imagen noticia"
+        >
 
-      <div class="news-body">
-        <div class="news-meta">{{ noticia.fecha }}</div>
-        <h3>{{ noticia.titulo }}</h3>
-        <p>{{ noticia.descripcion }}</p>
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">
+            {{ noticia.titulo }}
+          </h5>
+
+          <p class="card-text">
+            {{ noticia.descripcion }}
+          </p>
+
+          <a [routerLink]="['/noticia', noticia.id]" class="stretched-link">
+            <span class="visually-hidden">Ver detalle</span>
+          </a>
+        </div>
       </div>
-
-      <a [routerLink]="['/noticia', noticia.id]" class="news-link">
-        Ver detalle
-      </a>
-    </article>
+    </div>
   </div>
-</section>
+</div>

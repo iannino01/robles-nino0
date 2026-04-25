@@ -1,0 +1,20 @@
+.detalle-card {
+  border-radius: 24px;
+}
+
+.info-box {
+  height: 100%;
+  padding: 1rem;
+  border-radius: 18px;
+  background: #f8f9fa;
+}
+
+.info-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

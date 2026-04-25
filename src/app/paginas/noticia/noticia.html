@@ -1,22 +1,23 @@
-@if (noticia) {
-  <section class="detail-section">
-    <article class="detail-card">
-      <span class="detail-type">{{ noticia.tipo }}</span>
-      <h2>{{ noticia.titulo }}</h2>
-      <p class="detail-date">{{ noticia.fecha }}</p>
-      <p class="detail-copy">{{ noticia.descripcion }}</p>
+<div class="container mt-4" *ngIf="noticia">
+  <div class="card shadow">
+    <img
+      src="https://via.placeholder.com/800x400"
+      class="card-img-top"
+      alt="Imagen noticia"
+    >
 
-      <div class="detail-actions">
-        <a routerLink="/noticias" class="back-link">Volver a noticias</a>
-      </div>
-    </article>
-  </section>
-} @else {
-  <section class="detail-section">
-    <article class="detail-card detail-empty">
-      <h2>Noticia no disponible</h2>
-      <p>No encontramos el contenido solicitado.</p>
-      <a routerLink="/noticias" class="back-link">Regresar a noticias</a>
-    </article>
-  </section>
-}
+    <div class="card-body">
+      <h2 class="card-title">
+        {{ noticia.titulo }}
+      </h2>
+
+      <p class="card-text">
+        {{ noticia.descripcion }}
+      </p>
+
+      <a routerLink="/noticias" class="btn btn-secondary">
+        Volver
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,100 +1,114 @@
-<section class="page-section">
-  <div class="family-summary">
-    <div>
-      <span>Directorio</span>
-      <h2>Integrantes registrados</h2>
+<div class="container py-5">
+  <div class="row g-4 align-items-start">
+    <div class="col-lg-4">
+      <div class="card shadow-sm border-0 form-card">
+        <div class="card-body p-4">
+          <h2 class="fw-bold mb-3">
+            {{ integranteEnEdicion ? 'Editar integrante' : 'Agregar integrante' }}
+          </h2>
+          <p class="text-secondary mb-4">
+            {{ integranteEnEdicion
+              ? 'Actualiza la informacion del integrante seleccionado.'
+              : 'Guarda la informacion de cada familiar para verla despues.' }}
+          </p>
+
+          <form (ngSubmit)="guardarIntegrante()">
+            <div class="mb-3">
+              <label class="form-label">Nombre</label>
+              <input [(ngModel)]="nuevoIntegrante.nombre" name="nombre" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Apellido</label>
+              <input [(ngModel)]="nuevoIntegrante.apellido" name="apellido" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Fecha de nacimiento</label>
+              <input
+                [(ngModel)]="nuevoIntegrante.fechaNac"
+                name="fechaNac"
+                class="form-control"
+                placeholder="dd/mm/aaaa"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Parentesco</label>
+              <input
+                [(ngModel)]="nuevoIntegrante.parentesco"
+                name="parentesco"
+                class="form-control"
+                placeholder="Mama, Papa, Hijo..."
+              />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Signo zodiacal</label>
+              <input [(ngModel)]="nuevoIntegrante.signoZod" name="signoZod" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Descripcion</label>
+              <textarea
+                [(ngModel)]="nuevoIntegrante.descripcion"
+                name="descripcion"
+                class="form-control"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              {{ integranteEnEdicion ? 'Actualizar integrante' : 'Guardar integrante' }}
+            </button>
+            <button
+              *ngIf="integranteEnEdicion"
+              type="button"
+              class="btn btn-outline-secondary w-100 mt-2"
+              (click)="cancelarEdicion()"
+            >
+              Cancelar edicion
+            </button>
+          </form>
+
+          <div *ngIf="mensaje" class="alert alert-info mt-3 mb-0">
+            {{ mensaje }}
+          </div>
+        </div>
+      </div>
     </div>
-    <strong>{{ familia().length }} personas</strong>
-  </div>
 
-  <section class="family-admin">
-    <div class="family-admin-copy">
-      <span>Cuenta activa</span>
-      <h3>{{ authGoogle.perfil()?.name || authGoogle.perfil()?.email || 'Usuario autenticado' }}</h3>
-      <p>
-        Agrega familiares desde tu propia cuenta. Si Cloud ya esta configurado, estos datos se guardan en la nube.
-      </p>
-    </div>
-
-    <form class="family-form" (ngSubmit)="agregarFamiliar()">
-      <label>
-        <span>Nombre</span>
-        <input
-          type="text"
-          name="nombre"
-          [(ngModel)]="familiarNuevo.nombre"
-          placeholder="Nombre"
-          required>
-      </label>
-
-      <label>
-        <span>Apellido</span>
-        <input
-          type="text"
-          name="apellido"
-          [(ngModel)]="familiarNuevo.apellido"
-          placeholder="Apellido"
-          required>
-      </label>
-
-      <label>
-        <span>Fecha de nacimiento</span>
-        <input
-          type="date"
-          name="fechaNac"
-          [(ngModel)]="familiarNuevo.fechaNac"
-          required>
-      </label>
-
-      <label>
-        <span>Signo zodiacal</span>
-        <input
-          type="text"
-          name="signoZod"
-          [(ngModel)]="familiarNuevo.signoZod"
-          placeholder="Opcional">
-      </label>
-
-      <button class="family-submit" type="submit" [disabled]="guardando()">
-        {{ guardando() ? 'Guardando...' : 'Agregar familiar' }}
-      </button>
-    </form>
-  </section>
-
-  @if (!backendDisponible()) {
-    <p class="family-note">
-      Cloud aun no esta configurado en este proyecto. Por ahora los familiares se guardan solo en este navegador.
-    </p>
-  }
-
-  @if (error()) {
-    <p class="family-error">{{ error() }}</p>
-  }
-
-  @if (cargando()) {
-    <p class="family-loading">Cargando familiares...</p>
-  }
-
-  <div class="family-grid">
-    <article class="family-card" *ngFor="let persona of familia()">
-      <div class="family-avatar">
-        {{ persona.nombre.charAt(0) }}{{ persona.apellido.charAt(0) }}
+    <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold mb-0">Integrantes registrados</h3>
+        <span class="badge text-bg-dark">{{ familia.length }}</span>
       </div>
 
-      <div class="family-body">
-        <h3>{{ persona.nombre }} {{ persona.apellido }}</h3>
-
-        <dl>
-          <div>
-            <dt>Fecha de nacimiento</dt>
-            <dd>{{ persona.fechaNac || 'Pendiente' }}</dd>
-          </div>
-          <div>
-            <dt>Signo zodiacal</dt>
-            <dd>{{ persona.signoZod || 'Pendiente' }}</dd>
-          </div>
-        </dl>
+      <div class="row">
+        <div class="col-md-6 mb-4" *ngFor="let persona of familia">
+          <button
+            type="button"
+            class="card family-card shadow-sm h-100 border-0 text-start w-100"
+            (click)="verDetalle(persona.id)"
+          >
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                <span class="badge text-bg-light">{{ persona.parentesco || 'Familiar' }}</span>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="editarIntegrante(persona, $event)"
+                >
+                  Editar
+                </button>
+              </div>
+              <h5 class="card-title fw-bold">{{ persona.nombre }} {{ persona.apellido }}</h5>
+              <p class="mb-2">Fecha de nacimiento: {{ persona.fechaNac }}</p>
+              <p class="mb-0">Signo zodiacal: {{ persona.signoZod || 'No definido' }}</p>
+            </div>
+          </button>
+        </div>
       </div>
-    </article>
+    </div>
   </div>
-</section>
+</div>

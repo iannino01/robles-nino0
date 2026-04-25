@@ -1,0 +1,44 @@
+<div class="container py-5" *ngIf="persona; else noEncontrado">
+  <div class="card detalle-card shadow border-0">
+    <div class="card-body p-4 p-md-5">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+          <span class="badge text-bg-primary mb-3">{{ persona.parentesco || 'Familiar' }}</span>
+          <h2 class="fw-bold mb-2">{{ persona.nombre }} {{ persona.apellido }}</h2>
+          <p class="text-secondary mb-0">Informacion guardada en la base local del navegador.</p>
+        </div>
+        <a routerLink="/familia" class="btn btn-outline-secondary">Volver</a>
+      </div>
+
+      <div class="row g-3 mt-4">
+        <div class="col-md-6">
+          <div class="info-box">
+            <span class="info-label">Fecha de nacimiento</span>
+            <p class="mb-0">{{ persona.fechaNac }}</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="info-box">
+            <span class="info-label">Signo zodiacal</span>
+            <p class="mb-0">{{ persona.signoZod || 'No definido' }}</p>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="info-box">
+            <span class="info-label">Descripcion</span>
+            <p class="mb-0">{{ persona.descripcion || 'Sin descripcion registrada.' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noEncontrado>
+  <div class="container py-5">
+    <div class="alert alert-warning shadow-sm">
+      No se encontro la informacion del integrante.
+      <a routerLink="/familia" class="alert-link ms-2">Regresar a la lista</a>
+    </div>
+  </div>
+</ng-template>

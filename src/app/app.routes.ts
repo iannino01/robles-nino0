@@ -6,6 +6,7 @@ import { Noticia } from './paginas/noticia/noticia';
 import { Login } from './componentes/login/login';
 import { SesionIniciada } from './paginas/sesion-iniciada/sesion-iniciada';
 import { authGuard } from './guards/auth.guard';
+import { DetalleFamilia } from './paginas/detalle-familia/detalle-familia';
 
 
 export const routes: Routes = [
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'sesion-iniciada', component: SesionIniciada, canActivate: [authGuard] },
   { path: 'familia', component: CFamilia, canActivate: [authGuard] },
+  { path: 'familia/:id', component: DetalleFamilia, canActivate: [authGuard] },
   { path: 'acercade', component: Acercade, canActivate: [authGuard] },
   { path: 'noticias', component: Noticias, canActivate: [authGuard] },
   { path: 'noticia/:id', component: Noticia, canActivate: [authGuard] },

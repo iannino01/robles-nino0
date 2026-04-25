@@ -1,13 +1,15 @@
 import { Injectable, signal } from '@angular/core';
-import { addDoc, collection, getDocs, getFirestore, orderBy, query } from 'firebase/firestore';
+import { collection, doc, getDocs, getFirestore, orderBy, query, setDoc } from 'firebase/firestore';
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { Familiar } from '../modelos/familiar';
 import { firebaseConfig, firebaseEstaConfigurado } from '../firebase.config';
 
 type FamiliarNuevo = {
   apellido: string;
+  descripcion: string;
   fechaNac: string;
   nombre: string;
+  parentesco: string;
   signoZod: string;
 };
 
@@ -63,14 +65,16 @@ export class ServFamilia {
       apellido: familiar.apellido.trim(),
       fechaNac: familiar.fechaNac,
       signoZod: familiar.signoZod.trim(),
+      parentesco: familiar.parentesco.trim(),
+      descripcion: familiar.descripcion.trim(),
       creadoPor: usuarioId,
       creadoEn: new Date().toISOString(),
     };
 
     try {
       if (this.firestore) {
-        const familiaresRef = collection(this.firestore, 'usuarios', usuarioId, 'familiares');
-        await addDoc(familiaresRef, nuevoFamiliar);
+        const familiarRef = doc(this.firestore, 'usuarios', usuarioId, 'familiares', nuevoFamiliar.id);
+        await setDoc(familiarRef, nuevoFamiliar);
       }
 
       this.guardarEnLocal(usuarioId, nuevoFamiliar);
@@ -79,6 +83,32 @@ export class ServFamilia {
       console.error('No se pudo guardar el familiar.', error);
       this.error.set('No se pudo guardar el familiar. Revisa tu configuracion de Cloud.');
     }
+  }
+
+  async actualizarFamiliar(usuarioId: string, familiar: Familiar): Promise<void> {
+    if (!usuarioId) {
+      this.error.set('Primero necesitas iniciar sesion para editar familiares.');
+      return;
+    }
+
+    this.error.set('');
+
+    try {
+      if (this.firestore) {
+        const familiarRef = doc(this.firestore, 'usuarios', usuarioId, 'familiares', familiar.id);
+        await setDoc(familiarRef, familiar);
+      }
+
+      this.actualizarEnLocal(usuarioId, familiar);
+      await this.cargarFamilia(usuarioId);
+    } catch (error) {
+      console.error('No se pudo actualizar el familiar.', error);
+      this.error.set('No se pudo actualizar el familiar. Revisa tu configuracion de Cloud.');
+    }
+  }
+
+  consultarFamiliarPorId(id: string): Familiar | undefined {
+    return this.familia().find((persona) => persona.id === id);
   }
 
   private async cargarDesdeFirestore(usuarioId: string): Promise<void> {
@@ -117,6 +147,14 @@ export class ServFamilia {
   private guardarEnLocal(usuarioId: string, nuevoFamiliar: Familiar): void {
     const actuales = this.leerLocales(usuarioId);
     const actualizados = [nuevoFamiliar, ...actuales];
+    localStorage.setItem(this.obtenerLlaveUsuario(usuarioId), JSON.stringify(actualizados));
+  }
+
+  private actualizarEnLocal(usuarioId: string, familiarActualizado: Familiar): void {
+    const actuales = this.leerLocales(usuarioId);
+    const actualizados = actuales.map((persona) =>
+      persona.id === familiarActualizado.id ? familiarActualizado : persona
+    );
     localStorage.setItem(this.obtenerLlaveUsuario(usuarioId), JSON.stringify(actualizados));
   }
 
