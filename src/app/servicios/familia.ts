@@ -12,49 +12,49 @@ export class ServFamilia {
   
     {
     id : 1,
-    nombre : 'Jose Juan',
-    apellido : 'Robles Elizondo',
-    fecha_nac : '4/07/79',
+    nombre : 'Ian David',
+    apellido : 'Robles Nino',
+    fecha_nac : '1/04/06',
     signo_zod : ''
     },
 
     {
     id : 2,
-    nombre : 'Sandra Mireya',
-    apellido : 'Nino Fuentes',
-    fecha_nac : '1/05/80',
+    nombre : 'Maria Victoria',
+    apellido : 'Nino Herrera',
+    fecha_nac : '27/12/74',
     signo_zod : ''
     },
 
     {
     id : 3,
-    nombre : 'Jezreel Abisai',
+    nombre : 'Daniel Isai',
     apellido : 'Robles Nino',
-    fecha_nac : '8/07/98',
+    fecha_nac : '28/11/04',
     signo_zod : ''
     },
 
     {
     id : 4,
-    nombre : 'Misael',
-    apellido : 'Robles Nino',
-    fecha_nac : '23/11/02',
+    nombre : 'Monica Yaresy',
+    apellido : 'Pachicano Nino',
+    fecha_nac : '17/03/92',
     signo_zod : ''
     },
     
       {
     id : 5,
-    nombre : 'Valeria Sarahi',
-    apellido : 'Robles Nino',
-    fecha_nac : '2/02/05',
+    nombre : 'Katia Gissell',
+    apellido : 'Pachicano Nino',
+    fecha_nac : '16/05/94',
     signo_zod : ''
     },
 
 
     {
     id : 6,
-    nombre : 'Daniel',
-    apellido : 'Robles Nino',
+    nombre : 'Danisse',
+    apellido : 'Pachicano Nino',
     fecha_nac : '14/07/06',
     signo_zod : ''
     },
